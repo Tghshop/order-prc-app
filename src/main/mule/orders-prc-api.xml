@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+    <flow name="orders-prc-api-main" doc:id="d4adefbc-1c2d-4063-a45f-23787517f903">
+        <http:listener config-ref="orders-prc-api-http-listener-config" path="/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="orders-prc-api-config" />
+    </flow>
+    <flow name="delete:\api\v1\orders\(orderId):orders-prc-api-config">
+        <json-logger:logger doc:name="log-delete-order-start" doc:id="406b48c1-741f-4317-9908-42240157d317" config-ref="json-logger-config" message="#[&quot;----------&quot; ++ upper(&quot;log-delete-order-start&quot;) ++ '----------']">
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="ef253d0a-1807-413a-b258-a110d3e62741" name="set-request-params-sub-flow" target="requestParams" />
+		<flow-ref doc:name="delete-order-sub-flow" doc:id="16dd12a9-711c-4f3d-947e-0f7460a853b4" name="delete-order-sub-flow"/>
+		<ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-delete-order-end" doc:id="46c310f9-9097-41ac-8f5c-a70148211e88" config-ref="json-logger-config" message="#[&quot;----------&quot; ++ upper(&quot;log-delete-order-end&quot;) ++ '----------']" >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="patch:\api\v1\orders\(orderId):application\json:orders-prc-api-config">
+        <json-logger:logger doc:name="log-update-order-details-start" doc:id="ecbf3b28-6e4f-47d0-98d4-81a51cd6578b" config-ref="json-logger-config" message='#["---------" ++ upper("log-update-order-details-start") ++ "---------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="4b04ddaa-ee6e-4f9f-b13c-7f169a5b60a6" name="set-request-params-sub-flow" target="requestParams" />
+        <flow-ref doc:name="patch-order-details-sub-flow" doc:id="01a3268f-7c58-4d3a-a1e5-2136cd793637" name="patch-order-details-sub-flow"/>
+		<ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-update-order-details-end" doc:id="6b442901-6f38-4c3e-a8e7-f5d06f0f7dc6" config-ref="json-logger-config" message='#["---------" ++ upper("log-update-order-details-end") ++ "---------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="get:\api\v1\orders:orders-prc-api-config">
+        <json-logger:logger doc:name="log-get-orders-data-start" doc:id="7e1d8689-bc79-4d36-a8dd-705eb2fc8420" config-ref="json-logger-config" message='#["---------" ++ upper("log-get-orders-data-start") ++ "----------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="cded7683-c0c5-44b6-af0d-83dbb60e4b13" name="set-request-params-sub-flow" target="requestParams" />
+		<flow-ref doc:name="get-orders-data-sub-flow" doc:id="98fa6a86-b093-46de-bc9a-8334e5415ada" name="get-orders-data-sub-flow"/>
+		<ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-get-orders-data-end" doc:id="a71073da-6d5f-4648-b82b-82c5db62a5a8" config-ref="json-logger-config" message='#["---------" ++ upper("log-get-orders-data-end") ++ "----------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="get:\api\v1\orders\(orderId):orders-prc-api-config">
+        <json-logger:logger doc:name="log-get-order-details-start" doc:id="32cc86f2-0536-46f9-b457-b698e947f7cc" config-ref="json-logger-config" message='#["-----------" ++ upper("log-get-order-details-start") ++ "-----------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="476c4779-0e20-4d71-adc5-d9e15b19ae25" name="set-request-params-sub-flow" target="requestParams" />
+		<flow-ref doc:name="get-order-byid-sub-flow" doc:id="643b3158-15b2-45f3-a85f-1f776511326f" name="get-order-byid-sub-flow"/>
+		<ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-get-order-details-end" doc:id="b4ace294-de0a-47d9-9d6b-79af47671d17" config-ref="json-logger-config" message='#["-----------" ++ upper("log-get-order-details-end") ++ "-----------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+    <flow name="post:\api\v1\orders:application\json:orders-prc-api-config">
+        <json-logger:logger doc:name="log-post-order-record-start" doc:id="c10cc6fe-3b5d-404a-8b7d-c1e94c04d6fb" config-ref="json-logger-config" message='#["----------" ++ upper("log-post-order-record-start") ++ "---------------"]'>
+			<json-logger:content><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="set-request-params-sub-flow-reference" doc:id="6c6885c7-5a42-4d53-8eb0-1c2d89722568" name="set-request-params-sub-flow" target="requestParams" />
+		<flow-ref doc:name="post-order-record-sub-flow" doc:id="95d558a7-2723-4624-bbb9-76625a517e27" name="post-order-record-sub-flow"/>
+		<ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="log-post-order-record-end" doc:id="9b80e83b-9248-474e-8611-e64d0cf6692e" config-ref="json-logger-config" message='#["----------" ++ upper("log-post-order-record-end") ++ "---------------"]' >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+    </flow>
+</mule>

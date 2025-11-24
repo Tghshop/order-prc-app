@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_7caa2e9e_08ac_41cf_b3eb_e563f3497018_Output_Variables_requestParams = Any
+

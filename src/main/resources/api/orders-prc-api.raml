@@ -1,0 +1,65 @@
+#%RAML 1.0
+title: order-prc-api
+version: v1
+documentation:
+  - title: Orders Process API
+    content: The Order Management Process API orchestrates order creation, updates, and  retrieval between Salesforce, MySQL, and Delivery systems.
+
+traits:
+  errResponse: !include /exchange_modules/452f3798-822a-44ef-87e5-4e40034054da/trait-error-response/1.0.0/trait-error-response.raml
+
+
+/api:
+  /v1: 
+    /orders:
+      is: [errResponse]
+      get:
+        description: Retrieve all orders with customer and delivery details.
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include /Examples/getAllOrders.json
+
+      post:
+        description: Create a new order and sync to Salesforce and MySQL.
+        body:
+          application/json:
+            example: !include /Examples/orderPostRequest.json
+        responses:
+          201:
+            body:
+              application/json:
+                example: !include /Examples/orderPostResponse.json
+
+      /{orderId}:
+        uriParameters:
+          orderId:
+            type: string
+            description: Unique Order ID in Salesforce
+        get:
+          description: Retrieve specific order details.
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include /Examples/getOrderDetails.json
+
+        patch:
+          description: Update partial order info
+          body:
+            application/json:
+              example: !include Examples/orderPatchRequest.json
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include Examples/orderPatchResponse.json
+        
+        delete:
+          description: Delete an order by order ID.
+          responses:
+            200:
+              body:
+                application/json:
+                  example: !include Examples/orderCancelledResponse.json

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="sf-sys-api-call-impl-sub-flow" doc:id="35ab6282-cc45-400c-96b5-e8c14153b824" >
+		<json-logger:logger doc:name="log-sys-api-call-impl-sub-flow-start" doc:id="51dc0047-e2e1-4061-9d0e-95dd8324f8d2" config-ref="json-logger-config" message='#["-------------" ++ upper("log-sys-api-call-impl-sub-flow-end") ++ "------------------"]' tracePoint="BEFORE_REQUEST">
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<http:request method="#[vars.req.method]" doc:name="request-to-sf-sys-api" doc:id="dabf63b7-d68c-4e62-b729-4140788e6081" path="#[vars.req.path]" config-ref="sf-http-request_configuration">
+		</http:request>
+		<json-logger:logger doc:name="log-sys-api-call-impl-sub-flow-end" doc:id="34a26425-201c-4b3f-873b-3160da885815" config-ref="json-logger-config" tracePoint="END" message='#["-------------" ++ upper("sys-api-call-impl-	sub-flow-end") ++ "------------------"]'>
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>

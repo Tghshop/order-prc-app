@@ -1,0 +1,7 @@
+%dw 2.0
+
+type auto_3ec46247_7115_46bb_b336_ecdf0c143aaa_Output_Variables_req = {|
+  method: String, 
+  path: String
+|}
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="mail-sys-call-impl-sub-flow" doc:id="1c936993-cafc-46d8-be30-a933302de60f" >
+		<json-logger:logger doc:name="log-mail-sys-call-impl-sub-flow-start" doc:id="eb50ceae-8110-46ae-aa70-eb82c5062c7d" config-ref="json-logger-config" message='#["-------------" ++ upper("log-mail-sys-call-impl-sub-flow-end") ++ "------------------"]' tracePoint="BEFORE_REQUEST" >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+		<http:request method="POST" doc:name="request-to-mail-sys-api" doc:id="8ad542b0-a109-4132-b2d3-6a96400960cd" config-ref="mail-http-request_configuration" path="${httpRequester.mail-api.path}" outputMimeType="application/csv"/>
+		<json-logger:logger doc:name="log-sys-mail-call-impl-sub-flow-end" doc:id="22cfe071-6780-4c13-a7eb-9dca6b633122" config-ref="json-logger-config" message='#["-------------" ++ upper("mail-sys-call-impl-	sub-flow-end") ++ "------------------"]' tracePoint="END" >
+			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>
