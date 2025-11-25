@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
 	<http:listener-config name="orders-prc-api-http-listener-config">
-        <http:listener-connection host="0.0.0.0" port="8082" />
+        <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
     <apikit:config name="orders-prc-api-config" api="orders-prc-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" raml="api\orders-prc-api.raml"/>
 	<json-logger:config name="json-logger-config" doc:name="JSON Logger Config" doc:id="007a2ced-0c59-414b-b0ca-938d253a3df2" applicationName="${app.name}" applicationVersion="${app.version}" environment="${mule.env}" />
@@ -23,6 +24,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 	<http:request-config name="mail-http-request_configuration" doc:name="HTTP Request configuration" doc:id="47f57adc-8a9b-4cb8-9f08-7e2ceced52e7" basePath="${httpRequester.mail-api.base-path}" >
 		<http:request-connection host="${httpRequester.mail-api.host}" port="${httpRequester.mail-api.port}" connectionIdleTimeout="${httpRequester.mail-api.timeout}" protocol="HTTPS"/>
 	</http:request-config>
+	<api-gateway:autodiscovery apiId="20616788" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="c1f6f5a6-bc72-4b1e-9e1f-51452771104d" flowRef="orders-prc-api-main" />
 	<error-handler name="global-error-handler" doc:id="6140add2-e226-4664-83cb-2db4ccf2b94f" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="on-error-propagate" doc:id="75a815d3-a2e7-489a-84a6-400d5b728d4d" type="ANY" >
 			<ee:transform doc:name="prepare-error-payload" doc:id="4640b7ff-a21b-482c-871b-8965116a429b" >
