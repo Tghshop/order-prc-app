@@ -1,0 +1,3 @@
+{
+	"message": "Mail sent successfully"
+}

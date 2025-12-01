@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="global-test-suite.xml" />
+	<munit:test name="order-prc-api-global-error-handler-test" doc:id="44ca5ddf-dd07-44ef-ba52-879ac3747c02" description="Test" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mocking-api-kit-router" doc:id="8a47af23-6af0-44e6-860a-01d1f9997b09" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="orders-prc-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="4bfb5766-04cb-439b-b986-107a8083ecf0" >
+				<flow-ref doc:name="orders-prc-api-main" doc:id="ad4ce2a8-3f48-4763-9fe9-13fb3a74c316" name="orders-prc-api-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a6708fd8-1503-4d50-b506-785338ef5859" type="ANY" >
+						<logger level="INFO" doc:name="Logger" doc:id="90995573-e5f2-403a-bc1a-e00df5d1b151" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b88fbb2a-0a1f-43ee-ba52-c16a2cbcfb15" actual="#[payload.status]" expected='#["ERROR"]' />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

@@ -24,7 +24,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	<http:request-config name="mail-http-request_configuration" doc:name="HTTP Request configuration" doc:id="47f57adc-8a9b-4cb8-9f08-7e2ceced52e7" basePath="${httpRequester.mail-api.base-path}" >
 		<http:request-connection host="${httpRequester.mail-api.host}" port="${httpRequester.mail-api.port}" connectionIdleTimeout="${httpRequester.mail-api.timeout}" protocol="HTTPS"/>
 	</http:request-config>
-	<api-gateway:autodiscovery apiId="20616788" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="c1f6f5a6-bc72-4b1e-9e1f-51452771104d" flowRef="orders-prc-api-main" />
+	<api-gateway:autodiscovery apiId="20622398" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="c1f6f5a6-bc72-4b1e-9e1f-51452771104d" flowRef="orders-prc-api-main" />
 	<error-handler name="global-error-handler" doc:id="6140add2-e226-4664-83cb-2db4ccf2b94f" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="on-error-propagate" doc:id="75a815d3-a2e7-489a-84a6-400d5b728d4d" type="ANY" >
 			<ee:transform doc:name="prepare-error-payload" doc:id="4640b7ff-a21b-482c-871b-8965116a429b" >

@@ -10,12 +10,8 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		<json-logger:logger doc:name="log-get-orders-data-sub-flow-start" doc:id="3d047e83-8a8f-4c0a-bf5d-17f4e63f5622" config-ref="json-logger-config" message='#["-------------" ++ upper("log-get-orders-data-sub-flow-start") ++ "---------------"]'>
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
-		<ee:transform doc:name="Transform Message" doc:id="cd7bab66-9263-4007-9e4c-6718e248e567">
+		<ee:transform doc:name="req-variable" doc:id="cd7bab66-9263-4007-9e4c-6718e248e567">
 			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-vars.requestParams.payload]]></ee:set-payload>
 			</ee:message>
 			<ee:variables>
 				<ee:set-variable variableName="req" ><![CDATA[%dw 2.0
@@ -39,12 +35,8 @@ output application/json
 		<json-logger:logger doc:name="log-get-order-byid-sub-flow-start" doc:id="6f84c40d-d91b-4378-97ba-c85cf4335de3" config-ref="json-logger-config" message='#["--------------" ++ upper("log-get-order-byid-sub-flow-start") ++ "----------------"]'>
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
-		<ee:transform doc:name="Transform Message" doc:id="2e815d13-c450-4139-a147-df19bf22f1b9">
+		<ee:transform doc:name="req-variable" doc:id="2e815d13-c450-4139-a147-df19bf22f1b9">
 			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-vars.requestParams.payload]]></ee:set-payload>
 			</ee:message>
 			<ee:variables>
 				<ee:set-variable variableName="req" ><![CDATA[%dw 2.0
@@ -67,7 +59,7 @@ output application/json
 		<json-logger:logger doc:name="log-post-order-record-sub-flow-start" doc:id="919e78be-03d0-4542-9477-97154408e8e9" config-ref="json-logger-config" message='#["----------------" ++ upper("log-post-order-record-sub-flow-start") ++ "-----------------"]'>
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
-		<ee:transform doc:name="Transform Message" doc:id="9b052d77-a947-4fc4-b250-48268a3805f3">
+		<ee:transform doc:name="req-variable-payload-prep" doc:id="9b052d77-a947-4fc4-b250-48268a3805f3">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -104,7 +96,7 @@ output application/json
 		<flow-ref doc:name="sys-api-call-impl-sub-flow" doc:id="c7919eaa-10c0-49a2-b3f3-8fb8744a9e45" name="sf-sys-api-call-impl-sub-flow" target="ordResponse"/>
 		<choice doc:name="Choice" doc:id="1255f783-4a32-43f5-8604-2111a2b0ddd4" >
 			<when expression="#[vars.ordResponse.successful]">
-				<ee:transform doc:name="Transform Message" doc:id="2ba2b020-e3ba-43cd-85ae-215346a1f36c">
+				<ee:transform doc:name="customer-req-varaible" doc:id="2ba2b020-e3ba-43cd-85ae-215346a1f36c">
 			<ee:message>
 			</ee:message>
 			<ee:variables>
@@ -141,19 +133,21 @@ output application/json
 		</ee:transform>
 				<flow-ref doc:name="mail-sys-call-impl-sub-flow" doc:id="6d8f7128-89a3-4bf3-b7e5-d2c39e6f34d6" name="mail-sys-call-impl-sub-flow" />
 				<flow-ref doc:name="invoice-creation-sub-flow" doc:id="cbe6a1e4-31ba-4645-88be-e29fc57b7bd9" name="invoice-creation-sub-flow" />
-				<ee:transform doc:name="Transform Message" doc:id="bd57748b-43f2-4ce1-80d4-5454b5447035" >
+				<ee:transform doc:name="response-payload" doc:id="bd57748b-43f2-4ce1-80d4-5454b5447035" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 {
-	"message": "Order has been succefully created"
+  message: "Order record created successfully",
+  orderId: vars.requestParams.payload.orderId,
+  createdAt: now()
 }]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
 			</when>
 			<otherwise>
-				<ee:transform doc:name="Transform Message" doc:id="5d5599a7-21af-46c6-8323-ad416369e7af" >
+				<ee:transform doc:name="response-payload" doc:id="5d5599a7-21af-46c6-8323-ad416369e7af" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -175,7 +169,7 @@ output application/json
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
 		<flow-ref doc:name="get-order-byid-sub-flow" doc:id="db5dfe82-88bb-40c9-b16c-0316d84d394a" name="get-order-byid-sub-flow" target="order"/>
-		<ee:transform doc:name="Transform Message" doc:id="3a6b006f-8954-47e5-908c-fa69a878976c">
+		<ee:transform doc:name="req-vaiable-payload-prep" doc:id="3a6b006f-8954-47e5-908c-fa69a878976c">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -217,7 +211,7 @@ output application/json
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
 		<flow-ref doc:name="get-order-byid-sub-flow" doc:id="f286db53-6f1f-45b3-aa78-4958399e6f5e" name="get-order-byid-sub-flow" target="order" />
-		<ee:transform doc:name="Transform Message" doc:id="8ebef353-697b-4695-9424-d0b4af66a629" >
+		<ee:transform doc:name="req-variable-payload-prep" doc:id="8ebef353-697b-4695-9424-d0b4af66a629" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -247,7 +241,7 @@ output application/json
 		<json-logger:logger doc:name="log-invoice-creation-sub-flow-start" doc:id="9e39b65f-6e66-4851-9663-c7a721629fe0" config-ref="json-logger-config" message='#["-------------" ++ upper("log-invoice-creation-sub-flow-start") ++ "---------------"]' >
 			<json-logger:content ><![CDATA[#[payload]]]></json-logger:content>
 		</json-logger:logger>
-		<ee:transform doc:name="Transform Message" doc:id="9c8b088c-f065-4880-8b67-8e7d70ba1910" >
+		<ee:transform doc:name="req-variable-payload-prep" doc:id="9c8b088c-f065-4880-8b67-8e7d70ba1910" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
