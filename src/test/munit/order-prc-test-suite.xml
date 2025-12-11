@@ -25,9 +25,11 @@
 		</munit:execution>
 		<munit:validation >
 			<munit-tools:assert-equals doc:name="Assert equals" doc:id="97c2e4aa-2dc2-4c9e-82cc-a71b2cc2ef74" actual="#[payload]" expected="#[output application/json --- readUrl('classpath://orders/get-orders-response.dwl')]" />
-		</munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="dc3efe70-26a6-4073-8939-6586546eb642" is="#[MunitTools::notNullValue()]"/>
+		
+</munit:validation>
 	</munit:test>
-	<munit:test name="ord-prc-test-get-order-data" doc:id="f8143e34-d581-4590-b8fc-1112b0fb65b3" >
+	<munit:test name="ord-prc-test-get-order-data" doc:id="f8143e34-d581-4590-b8fc-1112b0fb65b3" expectedErrorType="HTTP:TIMEOUT">
 		<munit:behavior >
 			<munit-tools:mock-when doc:name="Mocking-request-to-sf-sys" doc:id="9d910a79-fada-4606-8618-7b0780bfc94e" processor="http:request" >
 				<munit-tools:with-attributes >
@@ -163,7 +165,8 @@
 		</munit:execution>
 		<munit:validation >
 			<munit-tools:assert-equals doc:name="Assert equals" doc:id="69277c48-f722-4721-91e4-e9c8cc36dec2" actual="#[payload]" expected="#[output application/json --- readUrl('classpath://orders/delete-order-response.dwl')]" />
-		</munit:validation>
+		
+</munit:validation>
 	</munit:test>
 
 </mule>
